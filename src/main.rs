@@ -290,7 +290,6 @@ impl Chip8 {
                 self.mem[self.i as usize] = (self.v[x] / 100) as u8;
                 self.mem[self.i as usize + 1] = ((self.v[x] % 100) / 10) as u8;
                 self.mem[self.i as usize + 2] = (self.v[x] % 10) as u8;
-                println!("{} {} {} {}", self.v[x], self.mem[self.i as usize], self.mem[self.i as usize + 1], self.mem[self.i as usize + 2]);
                 self.pc += 2;
             }
             0xF000 if op & 0x00FF == 0x55 => { for o in 0..x { self.mem[self.i as usize + o] = self.v[o] } self.pc += 2 }
