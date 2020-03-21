@@ -1,5 +1,5 @@
 use std::time::{Duration, SystemTime};
-use std::{fs, env, thread};
+use std::{cmp, fs, env, thread};
 use sdl2::audio::{AudioSpecDesired, AudioQueue};
 use sdl2::keyboard::Keycode;
 use sdl2::render::Canvas;
@@ -292,8 +292,8 @@ impl Chip8 {
                 self.mem[self.i as usize + 2] = (self.v[x] % 10) as u8;
                 self.pc += 2;
             }
-            0xF000 if op & 0x00FF == 0x55 => { for o in 0..x { self.mem[self.i as usize + o] = self.v[o] } self.pc += 2 }
-            0xF000 if op & 0x00FF == 0x65 => { for o in 0..x { self.v[o] = self.mem[self.i as usize + o] } self.pc += 2 }
+            0xF000 if op & 0x00FF == 0x55 => { for o in 0..x+1 { self.mem[self.i as usize + o] = self.v[o] } self.pc += 2 }
+            0xF000 if op & 0x00FF == 0x65 => { for o in 0..x+1 { self.v[o] = self.mem[self.i as usize + o] } self.pc += 2 }
             _ => { panic!("Unsupported opcode: {:04X}", op) }
         }
     }
