@@ -212,7 +212,7 @@ impl Chip8 {
     #[allow(clippy::cognitive_complexity)]
     fn step(&mut self) {
         let op = ((self.mem[self.pc] as u16) << 8) | (self.mem[self.pc + 1] as u16);
-        println!("PC:{:04X} : Opcode:{:04X} : Delay Timer:{} : Sound Timer:{}", self.pc, op, self.delay_timer, self.sound_timer);
+        //println!("PC:{:04X} : Opcode:{:04X} : Delay Timer:{} : Sound Timer:{}", self.pc, op, self.delay_timer, self.sound_timer);
         let nnn = op & 0x0FFF;
         let nn = (op & 0x00FF) as u8;
         let n = op & 0x000F;
@@ -263,9 +263,9 @@ impl Chip8 {
                 let ypos = self.v[y] as usize;
                 let xpos = self.v[x] as usize;
                 for sy in (0..n as usize).map(|y| y + ypos) {
-                    let wy = if sy >= 32 { sy - 32 } else { sy };
+                    let wy = sy % 32;
                     for sx in (0..8).map(|x| x + xpos) {
-                        let wx = if sx >= 64 { sx - 64 } else { sx };
+                        let wx = sx % 64;
                         if (self.mem[self.i as usize + (sy - ypos)] & (0x80 >> (sx - xpos))) != 0 {
                             if self.screen[wy][wx] { self.screen[wy][wx] = false; collision = true } else { self.screen[wy][wx] = true }
                         }
@@ -306,7 +306,7 @@ impl Chip8 {
             self.play_sound();
             self.step();
             self.render();
-            thread::sleep(Duration::from_millis(2));
+            thread::sleep(Duration::from_millis(1));
         }
     }
 }
